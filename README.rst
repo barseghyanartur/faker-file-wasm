@@ -26,6 +26,9 @@ Usage examples
 
     txt_file = FAKER.txt_file()
     zip_file = FAKER.zip_file()
+    
+    print(txt_file.data)
+    print(zip_file.data)
 
 Writing documentation
 =====================
