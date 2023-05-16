@@ -125,7 +125,7 @@
         await pyodide.loadPackage("micropip");
         await pyodide.runPythonAsync("import micropip");
         await pyodide.runPythonAsync("micropip.install('faker-file')");
-        await pyodide.runPythonAsync("micropip.install('python-docx')");
+        await pyodide.runPythonAsync("micropip.install('python-docx', keep_going=True)`)");
         await pyodide.runPythonAsync("micropip.install('pathy')");
         await pyodide.runPythonAsync("micropip.install('xml2epub')");
         await pyodide.runPythonAsync("micropip.install('Jinja2')");
