@@ -102,23 +102,71 @@
           },
         });
 
+        async function loadPackageWithRetry(packageName, maxAttempts = 4) {
+          let attempt = 0;
+          let packageLoaded = false;
+
+          while (attempt < maxAttempts && !packageLoaded) {
+            try {
+              await pyodide.loadPackage([packageName]);
+              packageLoaded = true;
+            } catch (e) {
+              attempt++;
+              console.error(`Attempt ${attempt} to load package ${packageName} failed:`, e);
+            }
+          }
+
+          if (!packageLoaded) {
+            throw new Error(`Failed to load package ${packageName} after maximum attempts`);
+          }
+        }
+
         // Install faker-file using micropip
         await pyodide.loadPackage("micropip");
         await pyodide.runPythonAsync("import micropip");
         await pyodide.runPythonAsync("micropip.install('faker-file')");
+        await pyodide.runPythonAsync("micropip.install('python-docx')");
+        await pyodide.runPythonAsync("micropip.install('pathy')");
+        await pyodide.runPythonAsync("micropip.install('xml2epub')");
+        await pyodide.runPythonAsync("micropip.install('Jinja2')");
+
         try {
-          await pyodide.loadPackage(["faker-file"]);
-        } catch {}
+          await loadPackageWithRetry("faker-file");
+        } catch (e) {
+          console.error(e);
+        }
         try {
-          await pyodide.loadPackage(["faker-file"]);
-        } catch {}
+          await loadPackageWithRetry("python-docx");
+        } catch (e) {
+          console.error(e);
+        }
         try {
-          await pyodide.loadPackage(["faker-file"]);
-        } catch {}
+          await loadPackageWithRetry("pathy");
+        } catch (e) {
+          console.error(e);
+        }
         try {
-          await pyodide.loadPackage(["faker-file"]);
-        } catch {}
-        
+          await loadPackageWithRetry("xml2epub");
+        } catch (e) {
+          console.error(e);
+        }
+        try {
+          await loadPackageWithRetry("Jinja2");
+        } catch (e) {
+          console.error(e);
+        }
+        // try {
+        //   await pyodide.loadPackage(["faker-file"]);
+        // } catch {}
+        // try {
+        //   await pyodide.loadPackage(["faker-file"]);
+        // } catch {}
+        // try {
+        //   await pyodide.loadPackage(["faker-file"]);
+        // } catch {}
+        // try {
+        //   await pyodide.loadPackage(["faker-file"]);
+        // } catch {}
 
         let namespace = pyodide.globals.get("dict")();
         pyodide.runPython(
